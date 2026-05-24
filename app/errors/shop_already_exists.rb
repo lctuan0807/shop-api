@@ -1,0 +1,1 @@
+class ShopAlreadyExists < StandardError; end
