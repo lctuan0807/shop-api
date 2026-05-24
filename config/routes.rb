@@ -10,8 +10,12 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      # resources :shops
-      post "sign_up", to: "shops#create"
+      resources :shops, only: [] do
+        collection do
+          post "register"
+          post "login"
+        end
+      end
     end
   end
 end

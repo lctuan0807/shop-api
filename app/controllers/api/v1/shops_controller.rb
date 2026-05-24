@@ -1,22 +1,8 @@
 module Api
   module V1
     class ShopsController < ApplicationController
-      before_action :set_shop, only: %i[ show update destroy ]
-
-      # GET /shops
-      def index
-        @shops = Shop.all
-
-        render json: @shops
-      end
-
-      # GET /shops/1
-      def show
-        render json: @shop
-      end
-
-      # POST /shops
-      def create
+      # POST /register
+      def register
         shop, tokens = ShopCreator.new(shop_params).call
 
         if shop
@@ -33,30 +19,32 @@ module Api
         end
       end
 
-      # PATCH/PUT /shops/1
-      def update
-        if @shop.update(shop_params)
-          render json: @shop
-        else
-          render json: @shop.errors, status: :unprocessable_content
-        end
-      end
+      # POST /login
+      def login
+        shop, tokens = ShopAuthenticator.new({
+          email: params[:email],
+          password: params[:password]
+        }).call
 
-      # DELETE /shops/1
-      def destroy
-        @shop.destroy!
+        if shop
+          render_success(
+            "Shop logged in successfully",
+            {
+              shop: ShopSerializer.new(shop),
+              token: tokens
+            }
+          )
+        else
+          render json: { error: "Invalid credentials" }, status: :unauthorized
+        end
       end
 
       private
-        # Use callbacks to share common setup or constraints between actions.
-        def set_shop
-          @shop = Shop.find(params[:id])
-        end
 
-        # Only allow a list of trusted parameters through.
-        def shop_params
-          params.require(:shop).permit(:name, :email, :password, :status, :verify, :roles)
-        end
+      # Only allow a list of trusted parameters through.
+      def shop_params
+        params.require(:shop).permit(:name, :email, :password, :status, :verify, :roles)
+      end
     end
   end
 end
