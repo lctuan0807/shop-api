@@ -3,8 +3,6 @@ module Api
     class ShopsController < ApplicationController
       before_action :set_shop, only: %i[ show update destroy ]
 
-      rescue_from ShopAlreadyExists, with: :render_shop_already_exists
-
       # GET /shops
       def index
         @shops = Shop.all
@@ -22,12 +20,6 @@ module Api
         shop, tokens = ShopCreator.new(shop_params).call
 
         if shop
-          # render json: {
-          #   metadata: {
-          #     shop: shop,
-          #     token: tokens
-          #   }
-          # }, status: :created
 
           render json: shop,
                 serializer: RegisterShopSerializer,
@@ -61,13 +53,6 @@ module Api
         # Only allow a list of trusted parameters through.
         def shop_params
           params.require(:shop).permit(:name, :email, :password, :status, :verify, :roles)
-        end
-
-        def render_shop_already_exists
-          render json: {
-            code: 409,
-            error: "Shop already exists"
-          }, status: :conflict
         end
     end
   end

@@ -4,7 +4,7 @@ class ShopCreator
   end
 
   def call
-    raise ShopAlreadyExists if Shop.exists?(email: @params[:email])
+    raise BadRequestError, "Shop already exists" if Shop.exists?(email: @params[:email])
 
     new_shop = Shop.new(@params)
 
