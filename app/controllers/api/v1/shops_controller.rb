@@ -20,11 +20,14 @@ module Api
         shop, tokens = ShopCreator.new(shop_params).call
 
         if shop
-
-          render json: shop,
-                serializer: RegisterShopSerializer,
-                tokens: tokens,
-                status: :created
+          render_success(
+            "Shop created successfully",
+            {
+              shop: ShopSerializer.new(shop),
+              token: tokens
+            },
+            status: :created
+          )
         else
           render json: shop.errors, status: :unprocessable_content
         end

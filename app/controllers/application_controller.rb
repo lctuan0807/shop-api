@@ -47,6 +47,10 @@ class ApplicationController < ActionController::API
     )
   end
 
+  def render_success(message, data, status: :ok)
+    render json: { message: message, metadata: data }, status: status
+  end
+
   def render_error(code:, message:, status:, details: nil)
     response = {
       error: {
