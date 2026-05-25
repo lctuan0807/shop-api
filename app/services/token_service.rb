@@ -8,7 +8,7 @@ class TokenService
     token.update!(
       public_key: public_key,
       private_key: private_key,
-      refresh_token_used: [],
+      refresh_tokens_used: [],
       refresh_token: refresh_token
     )
   end
