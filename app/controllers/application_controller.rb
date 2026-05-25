@@ -1,14 +1,18 @@
 class ApplicationController < ActionController::API
   rescue_from ActiveRecord::RecordInvalid, with: :handle_record_invalid
-  # rescue_from ActiveRecord::RecordNotFound, with: :handle_record_not_found
   rescue_from ApiError, with: :handle_api_error
 
-  before_action :authenticate!
+  before_action :identify_api_key!
   before_action -> { check_permissions!("read") }
+  before_action :authenticate!
 
   private
 
   def authenticate!
+    @token = AuthenticateService.call(request)
+  end
+
+  def identify_api_key!
     api_key = request.headers["X-API-KEY"]
 
     raise ForbiddenError unless api_key
@@ -29,14 +33,6 @@ class ApplicationController < ActionController::API
       status: exception.status
     )
   end
-
-  # def handle_record_not_found(exception)
-  #   render_error(
-  #     code: "RECORD_NOT_FOUND",
-  #     message: exception.message,
-  #     status: :not_found
-  #   )
-  # end
 
   def handle_record_invalid(exception)
     render_error(

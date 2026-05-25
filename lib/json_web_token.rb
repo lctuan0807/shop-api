@@ -5,10 +5,10 @@ class JsonWebToken
     JWT.encode(payload, key)
   end
 
-  # def self.decode(token)
-  #   payload = JWT.decode(token, SECRET_KEY)[0]
-  #   HashWithIndifferentAccess.new payload
-  # rescue JWT::DecodeError
-  #   raise InvalidTokenError
-  # end
+  def self.decode(token, key)
+    payload = JWT.decode(token, key)[0]
+    HashWithIndifferentAccess.new payload
+  rescue JWT::DecodeError
+    raise InvalidTokenError
+  end
 end
