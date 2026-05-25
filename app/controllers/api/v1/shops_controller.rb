@@ -1,6 +1,8 @@
 module Api
   module V1
     class ShopsController < ApplicationController
+      skip_before_action :authenticate!, only: [:register, :login]
+
       # POST /register
       def register
         shop, tokens = ShopCreator.new(shop_params).call
@@ -37,6 +39,18 @@ module Api
         else
           render json: { error: "Invalid credentials" }, status: :unauthorized
         end
+      end
+
+      def logout
+        del_token = @token&.delete
+
+        render_success(
+          "Shop logged out successfully",
+          {
+            acknowledged: del_token.present?,
+            deletedCount: del_token ? 1 : 0
+          }
+        )
       end
 
       private

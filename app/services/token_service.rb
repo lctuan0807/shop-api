@@ -1,8 +1,8 @@
 class TokenService
-  ACCESS_TOKEN_EXPIRY = 2.days
-  REFERESH_TOKEN_EXPIRY = 7.days
+  ACCESS_TOKEN_EXPIRY = 2.days.from_now
+  REFERESH_TOKEN_EXPIRY = 7.days.from_now
 
-  def self.create_token(user_id, private_key: nil, public_key: nil, refresh_token: nil)
+  def self.create_or_update_token(user_id, private_key: nil, public_key: nil, refresh_token: nil)
     token = Token.find_or_create_by(user_id: user_id)
 
     token.update!(

@@ -8,24 +8,22 @@ class ShopAuthenticator
 
     raise BadRequestError, "Shop not registered" unless shop
 
-    if shop&.authenticate(@params[:password])
-      public_key, private_key = SecureRandom.hex(64), SecureRandom.hex(64)
+    raise UnauthorizedError, "Invalid credentials" unless shop&.authenticate(@params[:password])
 
-      tokens = TokenService.issue_token({
-        user_id: shop.id,
-        email: shop.email
-      }, public_key: public_key, private_key: private_key)
+    public_key, private_key = SecureRandom.hex(64), SecureRandom.hex(64)
 
-      TokenService.create_token(
-        shop.id,
-        public_key: public_key,
-        private_key: private_key,
-        refresh_token: tokens[:refresh_token]
-      )
+    tokens = TokenService.issue_token({
+      user_id: shop.id,
+      email: shop.email
+    }, public_key: public_key, private_key: private_key)
 
-      [ shop, tokens ]
-    else
-      raise UnauthorizedError, "Invalid credentials"
-    end
+    TokenService.create_or_update_token(
+      shop.id,
+      public_key: public_key,
+      private_key: private_key,
+      refresh_token: tokens[:refresh_token]
+    )
+
+    [ shop, tokens ]
   end
 end

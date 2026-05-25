@@ -14,6 +14,7 @@ Rails.application.routes.draw do
         collection do
           post "register"
           post "login"
+          post "logout"
         end
       end
     end
