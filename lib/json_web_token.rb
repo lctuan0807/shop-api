@@ -8,7 +8,7 @@ class JsonWebToken
   def self.decode(token, key)
     payload = JWT.decode(token, key)[0]
     HashWithIndifferentAccess.new payload
-  rescue JWT::DecodeError
-    raise InvalidTokenError
+  rescue JWT::DecodeError, JWT::ExpiredSignature, JWT::VerificationError
+    raise InvalidTokenError, "Invalid or expired token"
   end
 end

@@ -16,7 +16,7 @@ class ShopCreator
         email: new_shop.email
       }, public_key: public_key, private_key: private_key)
 
-      TokenService.create_token(
+      TokenService.create_or_update_token(
         new_shop.id,
         public_key: public_key,
         private_key: private_key,

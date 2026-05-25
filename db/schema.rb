@@ -38,7 +38,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_05_24_123853) do
   create_table "tokens", force: :cascade do |t|
     t.string "public_key", null: false
     t.string "private_key", null: false
-    t.text "refresh_token_used", default: [], array: true
+    t.text "refresh_tokens_used", default: [], array: true
     t.integer "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
