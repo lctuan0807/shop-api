@@ -1,7 +1,7 @@
 module Api
   module V1
     class ShopsController < ApplicationController
-      skip_before_action :authenticate!, only: [:register, :login]
+      skip_before_action :authenticate!, only: [ :register, :login, :refresh_token ]
 
       # POST /register
       def register
@@ -39,6 +39,22 @@ module Api
         else
           render json: { error: "Invalid credentials" }, status: :unauthorized
         end
+      end
+
+      # POST /refresh_token
+      def refresh_token
+        user_id = request.headers["X-CLIENT-ID"].presence
+        raise UnauthorizedError, "Missing client id" unless user_id
+
+        token = params[:refresh_token].presence
+        raise UnauthorizedError, "Missing refresh token" unless token
+
+        new_tokens = RefreshTokenService.new(user_id: user_id, refresh_token: token).call
+
+        render_success(
+          "Token refreshed successfully",
+          { token: new_tokens }
+        )
       end
 
       def logout

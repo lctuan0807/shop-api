@@ -15,6 +15,7 @@ Rails.application.routes.draw do
           post "register"
           post "login"
           post "logout"
+          post "refresh_token"
         end
       end
     end
