@@ -18,6 +18,8 @@ Rails.application.routes.draw do
           post "refresh_token"
         end
       end
+
+      resources :products
     end
   end
 end
