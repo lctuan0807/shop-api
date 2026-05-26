@@ -4,26 +4,19 @@ module Api
       # skip_before_action :authenticate!, only: [:index, :show]
 
       def create
-        product = Product.create!(product_params)
+        creator = Products::Factory.build(
+          product_params[:category]
+        )
+        product = creator.create(product_params.merge!(shop_id: @token.user_id))
 
-        if product
-          render_success(
-            "Product created successfully",
-            {
-              product: ProductSerializer.new(product)
-            },
-            status: :created
-          )
-        else
-          render_error(
-            code: "ERROR",
-            message: "Failed to create product",
-            status: :unprocessable_entity,
-            details: product.errors.to_hash
-          )
-        end
+        render_success(
+          "Product created successfully",
+          {
+            product: ProductSerializer.new(product)
+          },
+          status: :created
+        )
       end
-
       
       private
 
