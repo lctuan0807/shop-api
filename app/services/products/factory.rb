@@ -1,8 +1,8 @@
 module Products
   class Factory
     PRODUCT_CREATORS = {
-        "clothing" => ClothingCreator,
-        "electronic" => ElectronicCreator
+      "clothing" => ClothingCreator,
+      "electronic" => ElectronicCreator
     }
 
     def self.build(category)
