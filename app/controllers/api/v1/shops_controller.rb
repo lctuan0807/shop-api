@@ -57,7 +57,7 @@ module Api
         user_id = request.headers["X-CLIENT-ID"].presence
         raise UnauthorizedError, "Missing client id" unless user_id
 
-        refresh_token = params[:refresh_token]
+        refresh_token = request.headers["X-RFTOKEN-ID"].presence
         raise UnauthorizedError, "Missing refresh token" unless refresh_token
 
         tokens = RefreshTokenService.new(user_id: user_id, refresh_token: refresh_token).call
