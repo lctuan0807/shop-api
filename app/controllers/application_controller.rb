@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::API
   rescue_from ActiveRecord::RecordInvalid, with: :handle_record_invalid
+  rescue_from ActiveRecord::RecordNotFound, with: :handle_record_not_found
   rescue_from ApiError, with: :handle_api_error
 
   before_action :identify_api_key!
@@ -26,6 +27,13 @@ class ApplicationController < ActionController::API
     raise ForbiddenError, "Permission denied" unless @key.permissions.include?(required_permission)
   end
 
+  def serialize_collection(resources, serializer:)
+    ActiveModelSerializers::SerializableResource.new(
+      resources,
+      each_serializer: serializer
+    )
+  end
+
   def handle_api_error(exception)
     render_error(
       code: exception.code,
@@ -40,6 +48,14 @@ class ApplicationController < ActionController::API
       message: "Validation failed",
       status: :unprocessable_entity,
       details: exception.record.errors.to_hash
+    )
+  end
+
+  def handle_record_not_found(exception)
+    render_error(
+      code: "NOT_FOUND",
+      message: "Record not found",
+      status: :not_found
     )
   end
 
