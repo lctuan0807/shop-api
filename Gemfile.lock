@@ -112,6 +112,8 @@ GEM
     erubi (1.13.1)
     et-orbi (1.4.0)
       tzinfo
+    faker (3.8.0)
+      i18n (>= 1.8.11, < 2)
     ffi (1.17.4-aarch64-linux-gnu)
     ffi (1.17.4-aarch64-linux-musl)
     ffi (1.17.4-arm-linux-gnu)
@@ -216,6 +218,9 @@ GEM
     pg (1.6.3-x86_64-darwin)
     pg (1.6.3-x86_64-linux)
     pg (1.6.3-x86_64-linux-musl)
+    pg_search (2.3.7)
+      activerecord (>= 6.1)
+      activesupport (>= 6.1)
     pp (0.6.3)
       prettyprint
     prettyprint (0.2.0)
@@ -372,11 +377,13 @@ DEPENDENCIES
   bundler-audit
   debug
   dotenv
+  faker
   friendly_id (~> 5.5.0)
   image_processing (~> 1.2)
   jwt
   kamal
   pg (~> 1.1)
+  pg_search
   puma (>= 5.0)
   rails (~> 7.2.3)
   rubocop-rails-omakase
