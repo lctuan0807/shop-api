@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_05_26_065532) do
+ActiveRecord::Schema[7.2].define(version: 2026_05_28_041337) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -34,6 +34,13 @@ ActiveRecord::Schema[7.2].define(version: 2026_05_26_065532) do
     t.jsonb "metadata", default: {}
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "slug"
+    t.decimal "average_rating", precision: 2, scale: 1, default: "4.5", null: false
+    t.jsonb "variations", default: []
+    t.boolean "is_draft", default: true, null: false
+    t.boolean "is_published", default: false, null: false
+    t.index ["is_draft"], name: "index_products_on_is_draft"
+    t.index ["is_published"], name: "index_products_on_is_published"
     t.index ["shop_id"], name: "index_products_on_shop_id"
   end
 

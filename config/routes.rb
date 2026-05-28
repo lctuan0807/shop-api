@@ -19,7 +19,17 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :products
+      resources :products do
+        member do
+          put :publish
+          put :unpublish
+        end
+
+        collection do
+          get :published
+          get :draft
+        end
+      end
     end
   end
 end
