@@ -38,6 +38,7 @@ gem "image_processing", "~> 1.2"
 gem "jwt"
 gem "active_model_serializers"
 gem "friendly_id", "~> 5.5.0"
+gem "pg_search"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
@@ -53,4 +54,6 @@ group :development, :test do
   gem "rubocop-rails-omakase", require: false
 
   gem "dotenv"
+
+  gem "faker"
 end

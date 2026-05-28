@@ -6,9 +6,9 @@ module Products
       Product.create!(
         common_attributes(params).merge(
           metadata: {
-            brand: params.dig(:metadata, :brand),
-            size: params.dig(:metadata, :size),
-            material: params.dig(:metadata, :material)
+            manufacturer: params.dig(:metadata, :manufacturer),
+            model: params.dig(:metadata, :model),
+            color: params.dig(:metadata, :color)
           }
         )
       )

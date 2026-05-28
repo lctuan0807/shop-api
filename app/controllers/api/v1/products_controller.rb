@@ -1,16 +1,17 @@
 module Api
   module V1
     class ProductsController < ApplicationController
-      # skip_before_action :authenticate!, only: [:index, :show]
+      skip_before_action :authenticate!, only: [:index]
 
       def index
-        # products = Product.where(is_published: true)
-        # render_success(
-        #   "Products retrieved successfully",
-        #   {
-        #     products: ProductSerializer.new(products)
-        #   }
-        # )
+        products = Products::SearchQuery.new.call(params)
+        
+        render_success(
+          "Products retrieved successfully",
+          {
+            products: serialize_collection(products, serializer: ProductSerializer)
+          }
+        )
       end
 
       def create
