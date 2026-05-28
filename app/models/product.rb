@@ -20,6 +20,7 @@ class Product < ApplicationRecord
   validates :price, presence: true
   validates :quantity, presence: true
   validates :category, presence: true, inclusion: { in: CATEGORIES }
+<<<<<<< HEAD
 
   scope :published, -> { where(is_published: true) }
   
@@ -28,4 +29,6 @@ class Product < ApplicationRecord
     using: {
       tsearch: { prefix: true }
     }
+=======
+>>>>>>> 9cb31ce (adding rspec)
 end
