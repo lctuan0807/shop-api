@@ -1,15 +1,26 @@
 module Api
   module V1
     class ProductsController < ApplicationController
-      skip_before_action :authenticate!, only: [:index]
+      skip_before_action :authenticate!, only: [:index, :show]
 
       def index
-        products = Products::SearchQuery.new.call(params)
+        products = Products::AllQuery.new.call(params)
         
         render_success(
           "Products retrieved successfully",
           {
             products: serialize_collection(products, serializer: ProductSerializer)
+          }
+        )
+      end
+
+      def show
+        product = Product.friendly.find(params[:id])
+        
+        render_success(
+          "Product retrieved successfully",
+          {
+            product: ProductSerializer.new(product)
           }
         )
       end
@@ -30,7 +41,7 @@ module Api
       end
 
       def draft
-        products = Product.where(shop_id: @token.user_id, is_draft: true)
+        products = Product.where(shop_id: @token.user_id, is_draft: true).limit(50).order(created_at: :desc)
 
         render_success(
           "Products retrieved successfully",
@@ -41,7 +52,7 @@ module Api
       end
 
       def published
-        products = Product.where(shop_id: @token.user_id, is_published: true)
+        products = Product.where(shop_id: @token.user_id, is_published: true).limit(50).order(created_at: :desc)
 
         render_success(
           "Products retrieved successfully",
@@ -79,7 +90,7 @@ module Api
 
       # Only allow a list of trusted parameters through.
       def product_params
-        params.require(:product).permit(:name, :thumbnail, :description, :price, :quantity, :category, :shop_id, metadata: {})
+        params.require(:product).permit(:name, :thumbnail, :description, :price, :quantity, :category, :shop_id, metadata: {}, variations: {})
       end
     end
   end

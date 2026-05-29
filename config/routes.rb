@@ -30,6 +30,10 @@ Rails.application.routes.draw do
           get :draft
         end
       end
+
+      get "search", to: "search#index"
+
+      get "", to: "products#index"
     end
   end
 end
