@@ -15,8 +15,6 @@ module Api
       end
 
       def show
-        product = Product.friendly.find(params[:id])
-        
         render_success(
           "Product retrieved successfully",
           {
@@ -37,6 +35,18 @@ module Api
             product: ProductSerializer.new(product)
           },
           status: :created
+        )
+      end
+
+      def update
+        service = Products::UpdateService.new(product, product_params)
+        service.call
+
+        render_success(
+          "Product updated successfully",
+          {
+            product: ProductSerializer.new(product)
+          }
         )
       end
 
@@ -63,7 +73,6 @@ module Api
       end
 
       def publish
-        product = Product.friendly.find(params[:id])
         product.update!(is_published: true, is_draft: false)
 
         render_success(
@@ -75,7 +84,6 @@ module Api
       end
 
       def unpublish
-        product = Product.friendly.find(params[:id])
         product.update!(is_published: false, is_draft: true)
 
         render_success(
@@ -87,6 +95,10 @@ module Api
       end
       
       private
+
+      def product
+        @product ||= Product.friendly.find(params[:id])
+      end
 
       # Only allow a list of trusted parameters through.
       def product_params
