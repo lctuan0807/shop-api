@@ -1,7 +1,9 @@
 module Products
   class BaseCreator
     def create(params)
-      Product.create!(common_attributes(params))
+      product = Product.create!(common_attributes(params))
+      create_inventory(product, params)
+      product
     end
 
     private
@@ -31,6 +33,15 @@ module Products
 
     def required_fields
       raise NotImplementedError, "Subclasses must implement #required_fields"
+    end
+    
+    def create_inventory(product)
+      Inventory.create!(
+        product: product,
+        shop: product.shop,
+        stock: product.quantity,
+        reservations: []
+      )
     end
   end
 end
