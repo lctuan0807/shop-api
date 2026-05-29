@@ -3,7 +3,7 @@ module Products
     def create(params)
       validate_metadata!(params[:metadata])
 
-      Product.create!(
+      product = Product.create!(
         common_attributes(params).merge(
           metadata: {
             manufacturer: params.dig(:metadata, :manufacturer),
@@ -12,6 +12,8 @@ module Products
           }
         )
       )
+      create_inventory(product)
+      product
     end
 
     private

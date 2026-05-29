@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_05_28_045639) do
+ActiveRecord::Schema[7.2].define(version: 2026_05_29_080547) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -21,6 +21,16 @@ ActiveRecord::Schema[7.2].define(version: 2026_05_28_045639) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["key"], name: "index_api_keys_on_key", unique: true
+  end
+
+  create_table "inventories", force: :cascade do |t|
+    t.string "location", default: "unknown"
+    t.integer "stock", null: false
+    t.integer "product_id", null: false
+    t.integer "shop_id", null: false
+    t.text "reservations", default: [], array: true
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "products", force: :cascade do |t|
