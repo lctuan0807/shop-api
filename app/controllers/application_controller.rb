@@ -9,8 +9,8 @@ class ApplicationController < ActionController::API
 
   private
 
-  def shop_id
-    @token.user_id
+  def current_shop
+    @current_shop ||= @token&.shop
   end
 
   def authenticate!

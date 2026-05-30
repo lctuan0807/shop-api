@@ -6,6 +6,9 @@ class Product < ApplicationRecord
 
   belongs_to :shop
 
+  has_many :discount_products, dependent: :destroy
+  has_many :discounts, through: :discount_products
+
   CATEGORIES = %w[
     clothing
     electronic

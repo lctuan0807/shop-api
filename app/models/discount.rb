@@ -1,6 +1,9 @@
 class Discount < ApplicationRecord
   belongs_to :shop
 
+  has_many :discount_products, dependent: :destroy
+  has_many :products, through: :discount_products
+
   validates :name, presence: true
   validates :description, presence: true
   validates :kind, presence: true
