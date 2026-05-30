@@ -31,7 +31,11 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :discounts
+      resources :discounts do
+        collection do
+          post :amount
+        end
+      end
 
       get "search", to: "search#index"
 

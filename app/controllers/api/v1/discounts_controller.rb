@@ -5,9 +5,20 @@ module Api
         discount = Discounts::CreateService.new(shop_id, discount_params).call
 
         render_success(
-          'Discount created successfully',
+          "Discount created successfully",
           {
             discount: DiscountSerializer.new(discount)
+          }
+        )
+      end
+
+      def amount
+        result = Discounts::AmountService.new(params[:code], params[:user_id], params[:shop_id], params[:products]).call
+
+        render_success(
+          "Success code found",
+          {
+            amount: result
           }
         )
       end
