@@ -9,6 +9,10 @@ class ApplicationController < ActionController::API
 
   private
 
+  def shop_id
+    @token.user_id
+  end
+
   def authenticate!
     @token = AuthenticateService.call(request)
   end

@@ -31,6 +31,8 @@ Rails.application.routes.draw do
         end
       end
 
+      resources :discounts
+
       get "search", to: "search#index"
 
       get "", to: "products#index"

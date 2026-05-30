@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_05_29_080547) do
+ActiveRecord::Schema[7.2].define(version: 2026_05_30_051716) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -21,6 +21,30 @@ ActiveRecord::Schema[7.2].define(version: 2026_05_29_080547) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["key"], name: "index_api_keys_on_key", unique: true
+  end
+
+  create_table "discounts", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "description", null: false
+    t.string "kind", default: "fixed", null: false
+    t.decimal "value", precision: 10, scale: 2, null: false
+    t.string "code", null: false
+    t.datetime "start_date", null: false
+    t.datetime "end_date", null: false
+    t.integer "max_uses", null: false
+    t.integer "uses_count", default: 0, null: false
+    t.text "uses_used", default: [], array: true
+    t.integer "max_uses_per_user", default: 0, null: false
+    t.decimal "min_order_value", precision: 10, scale: 2
+    t.decimal "max_order_value", precision: 10, scale: 2
+    t.bigint "shop_id", null: false
+    t.boolean "is_active", default: true, null: false
+    t.string "applies_to", default: "all", null: false
+    t.text "product_ids", default: [], array: true
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["shop_id", "code"], name: "index_discounts_on_shop_id_and_code", unique: true
+    t.index ["shop_id"], name: "index_discounts_on_shop_id"
   end
 
   create_table "inventories", force: :cascade do |t|
@@ -77,5 +101,6 @@ ActiveRecord::Schema[7.2].define(version: 2026_05_29_080547) do
     t.string "refresh_token"
   end
 
+  add_foreign_key "discounts", "shops"
   add_foreign_key "products", "shops"
 end
