@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_05_30_051716) do
+ActiveRecord::Schema[7.2].define(version: 2026_05_30_120402) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -21,6 +21,15 @@ ActiveRecord::Schema[7.2].define(version: 2026_05_30_051716) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["key"], name: "index_api_keys_on_key", unique: true
+  end
+
+  create_table "discount_products", force: :cascade do |t|
+    t.bigint "discount_id", null: false
+    t.bigint "product_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["discount_id"], name: "index_discount_products_on_discount_id"
+    t.index ["product_id"], name: "index_discount_products_on_product_id"
   end
 
   create_table "discounts", force: :cascade do |t|
@@ -40,7 +49,6 @@ ActiveRecord::Schema[7.2].define(version: 2026_05_30_051716) do
     t.bigint "shop_id", null: false
     t.boolean "is_active", default: true, null: false
     t.string "applies_to", default: "all", null: false
-    t.text "product_ids", default: [], array: true
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["shop_id", "code"], name: "index_discounts_on_shop_id_and_code", unique: true
@@ -101,6 +109,8 @@ ActiveRecord::Schema[7.2].define(version: 2026_05_30_051716) do
     t.string "refresh_token"
   end
 
+  add_foreign_key "discount_products", "discounts"
+  add_foreign_key "discount_products", "products"
   add_foreign_key "discounts", "shops"
   add_foreign_key "products", "shops"
 end
