@@ -41,6 +41,10 @@ Rails.application.routes.draw do
         resources :items, only: %i[create update destroy], controller: :cart_items
       end
 
+      namespace :checkout do
+        post :review
+      end
+
       get "search", to: "search#index"
 
       get "", to: "products#index"
