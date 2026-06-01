@@ -3,6 +3,7 @@ class Shop < ApplicationRecord
 
   has_many :products, dependent: :destroy
   has_many :discounts, dependent: :destroy
+  has_many :inventories, dependent: :destroy
 
   enum :roles, { shop: 0, writer: 1, editor: 2, admin: 3 }, default: [ :shop ]
 
