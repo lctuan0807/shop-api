@@ -22,6 +22,6 @@ class CreateDiscounts < ActiveRecord::Migration[7.2]
       t.timestamps
     end
 
-    add_index :discounts, [:shop_id, :code], unique: true
+    add_index :discounts, [ :shop_id, :code ], unique: true
   end
 end

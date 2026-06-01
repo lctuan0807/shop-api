@@ -19,7 +19,7 @@ module Discounts
     private
 
     attr_reader :shop, :params
-    
+
     def discount
       @discount ||= shop.discounts.find_by(code: params[:code])
     end

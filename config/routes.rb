@@ -37,7 +37,7 @@ Rails.application.routes.draw do
         end
       end
 
-      resource :cart, only: [:show] do
+      resource :cart, only: [ :show ] do
         resources :items, only: %i[create update destroy], controller: :cart_items
       end
 

@@ -1,7 +1,7 @@
 class Product < ApplicationRecord
   extend FriendlyId
   include PgSearch::Model
-  
+
   friendly_id :name, use: :slugged
 
   belongs_to :shop
@@ -22,7 +22,7 @@ class Product < ApplicationRecord
   validates :category, presence: true, inclusion: { in: CATEGORIES }
 
   scope :published, -> { where(is_published: true) }
-  
+
   pg_search_scope :search,
     against: [ :name, :description ],
     using: {

@@ -15,7 +15,7 @@ module Api
 
       def update
         Discounts::UpdateService.new(discount, discount_params).call
-        
+
         render_success(
           "Discount updated successfully",
           {

@@ -10,7 +10,7 @@ module Discounts
     def call
       validate_dates!
       validate_products!
-      
+
       ActiveRecord::Base.transaction do
         update_discount!
         update_products!

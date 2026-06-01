@@ -6,7 +6,7 @@ module Api
 
         render_success(
           "Stock added successfully",
-          { 
+          {
             inventory: InventorySerializer.new(inventory)
           }
         )

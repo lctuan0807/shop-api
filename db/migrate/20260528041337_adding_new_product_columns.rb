@@ -1,7 +1,7 @@
 class AddingNewProductColumns < ActiveRecord::Migration[7.2]
   def change
     return unless table_exists?(:products)
-    
+
     add_column :products, :slug, :string
     add_column :products, :average_rating, :decimal, precision: 2, scale: 1, default: 4.5, null: false
     add_column :products, :variations, :jsonb, default: []

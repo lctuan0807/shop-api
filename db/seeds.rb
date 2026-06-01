@@ -43,7 +43,7 @@ end
     thumbnail: Faker::Internet.url,
     metadata: {
       brand: Faker::Company.name,
-      size: ["S", "M", "L", "XL"].sample,
+      size: [ "S", "M", "L", "XL" ].sample,
       material: Faker::Commerce.material
     },
     is_published: true,

@@ -34,7 +34,7 @@ module Products
     def required_fields
       raise NotImplementedError, "Subclasses must implement #required_fields"
     end
-    
+
     def create_inventory(product)
       Inventory.create!(
         product: product,

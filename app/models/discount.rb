@@ -18,24 +18,24 @@ class Discount < ApplicationRecord
 
   validate :validate_date_range
   validate :validate_end_date_not_in_past
-  
-  enum :kind, { fixed: 'fixed', percentage: 'percentage' }
-  enum :applies_to, { all_products: 'all_products', specific_products: 'specific_products' }
-  
+
+  enum :kind, { fixed: "fixed", percentage: "percentage" }
+  enum :applies_to, { all_products: "all_products", specific_products: "specific_products" }
+
   scope :active, -> { where(is_active: true) }
-  scope :valid, -> { where('start_date <= ? AND end_date >= ?', Time.current, Time.current) }
+  scope :valid, -> { where("start_date <= ? AND end_date >= ?", Time.current, Time.current) }
 
   private
 
   def validate_date_range
     return if start_date.blank? || end_date.blank?
-    
-    errors.add(:end_date, 'must be after start date') if end_date <= start_date
+
+    errors.add(:end_date, "must be after start date") if end_date <= start_date
   end
 
   def validate_end_date_not_in_past
     return if end_date.blank?
 
-    errors.add(:end_date, 'must be in the future') if end_date < Date.today
+    errors.add(:end_date, "must be in the future") if end_date < Date.today
   end
 end

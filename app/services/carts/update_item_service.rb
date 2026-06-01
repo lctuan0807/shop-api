@@ -9,7 +9,7 @@ module Carts
       validate_old_quantity!
 
       cart_item.update!(quantity: params[:quantity])
-      
+
       cart_item
     end
 
