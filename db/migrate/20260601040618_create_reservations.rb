@@ -10,7 +10,5 @@ class CreateReservations < ActiveRecord::Migration[7.2]
     end
 
     add_index :reservations, [:inventory_id, :cart_id], unique: true
-
-    remove_column :inventories, :reservations
   end
 end
