@@ -41,6 +41,8 @@ Rails.application.routes.draw do
         resources :items, only: %i[create update destroy], controller: :cart_items
       end
 
+      resources :inventories
+
       namespace :checkout do
         post :review
       end

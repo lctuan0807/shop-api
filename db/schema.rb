@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_05_31_055801) do
+ActiveRecord::Schema[7.2].define(version: 2026_06_01_041205) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -75,12 +75,12 @@ ActiveRecord::Schema[7.2].define(version: 2026_05_31_055801) do
 
   create_table "inventories", force: :cascade do |t|
     t.string "location", default: "unknown"
-    t.integer "stock", null: false
+    t.integer "stock", default: 0, null: false
     t.integer "product_id", null: false
     t.integer "shop_id", null: false
-    t.text "reservations", default: [], array: true
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["shop_id", "product_id"], name: "index_inventories_on_shop_id_and_product_id", unique: true
   end
 
   create_table "products", force: :cascade do |t|
@@ -103,6 +103,18 @@ ActiveRecord::Schema[7.2].define(version: 2026_05_31_055801) do
     t.index ["is_published"], name: "index_products_on_is_published"
     t.index ["shop_id"], name: "index_products_on_shop_id"
     t.index ["slug"], name: "index_products_on_slug", unique: true
+  end
+
+  create_table "reservations", force: :cascade do |t|
+    t.bigint "inventory_id", null: false
+    t.bigint "cart_id", null: false
+    t.integer "quantity"
+    t.datetime "expired_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cart_id"], name: "index_reservations_on_cart_id"
+    t.index ["inventory_id", "cart_id"], name: "index_reservations_on_inventory_id_and_cart_id", unique: true
+    t.index ["inventory_id"], name: "index_reservations_on_inventory_id"
   end
 
   create_table "shops", force: :cascade do |t|
@@ -142,4 +154,6 @@ ActiveRecord::Schema[7.2].define(version: 2026_05_31_055801) do
   add_foreign_key "discount_products", "products"
   add_foreign_key "discounts", "shops"
   add_foreign_key "products", "shops"
+  add_foreign_key "reservations", "carts"
+  add_foreign_key "reservations", "inventories"
 end
