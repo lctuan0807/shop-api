@@ -8,8 +8,8 @@ module Products
       products = @scope.published
       # ILIKE is case-insensitive, but it's not supported by pg_search
       # products = search(products, params[:q])
-      
-      products = products.search(params[:keyword]).order(id: :asc).limit(limit) # pg_search 
+
+      products = products.search(params[:keyword]).order(id: :asc).limit(limit) # pg_search
       products
     end
 

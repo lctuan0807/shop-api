@@ -1,7 +1,7 @@
 module Api
   module V1
     class ShopsController < ApplicationController
-      skip_before_action :authenticate!, only: [:register, :login, :refresh_token]
+      skip_before_action :authenticate!, only: [ :register, :login, :refresh_token ]
 
       # POST /register
       def register
@@ -61,7 +61,7 @@ module Api
         raise UnauthorizedError, "Missing refresh token" unless refresh_token
 
         tokens = RefreshTokenService.new(user_id: user_id, refresh_token: refresh_token).call
-      
+
         render_success(
           "Token refreshed successfully",
           {

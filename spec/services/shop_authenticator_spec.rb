@@ -4,7 +4,7 @@ RSpec.describe ShopAuthenticator do
   subject { described_class.new({ email: "test@example.com", password: "password" }) }
 
   let!(:shop) { create(:shop, email: "test@example.com", password: "password", password_confirmation: "password") }
-  
+
   describe "#call" do
     context "when shop exists and password is correct" do
       before do
@@ -14,7 +14,7 @@ RSpec.describe ShopAuthenticator do
 
       it "returns the shop and tokens" do
         result = subject.call
-        expect(result).to eq([shop, { access_token: "access_token", refresh_token: "refresh_token" }])
+        expect(result).to eq([ shop, { access_token: "access_token", refresh_token: "refresh_token" } ])
       end
     end
 

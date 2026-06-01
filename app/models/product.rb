@@ -1,7 +1,7 @@
 class Product < ApplicationRecord
   extend FriendlyId
   include PgSearch::Model
-  
+
   friendly_id :name, use: :slugged
 
   belongs_to :shop
@@ -20,15 +20,12 @@ class Product < ApplicationRecord
   validates :price, presence: true
   validates :quantity, presence: true
   validates :category, presence: true, inclusion: { in: CATEGORIES }
-<<<<<<< HEAD
 
   scope :published, -> { where(is_published: true) }
-  
+
   pg_search_scope :search,
     against: [ :name, :description ],
     using: {
       tsearch: { prefix: true }
     }
-=======
->>>>>>> 9cb31ce (adding rspec)
 end

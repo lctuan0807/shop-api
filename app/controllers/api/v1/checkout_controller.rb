@@ -18,7 +18,7 @@ module Api
           shops: [
             :shop_id,
             discount_ids: [],
-            products: [:id, :price, :quantity]
+            products: [ :id, :price, :quantity ]
           ]
         )
       end

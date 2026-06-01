@@ -51,7 +51,7 @@ class RefreshTokenService
       user_id: @user_id,
       email: token.shop.email
     }, public_key: token.public_key, private_key: token.private_key)
-  end 
+  end
 
   def rotate_token!
     token.update!(
