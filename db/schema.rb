@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_06_01_041205) do
+ActiveRecord::Schema[7.2].define(version: 2026_06_02_123244) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -39,6 +39,24 @@ ActiveRecord::Schema[7.2].define(version: 2026_06_01_041205) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_carts_on_user_id", unique: true
+  end
+
+  create_table "comments", force: :cascade do |t|
+    t.bigint "product_id", null: false
+    t.integer "user_id", null: false
+    t.text "content", null: false
+    t.boolean "is_deleted", default: false, null: false
+    t.integer "lft", null: false
+    t.integer "rgt", null: false
+    t.integer "parent_id"
+    t.integer "depth", default: 0, null: false
+    t.integer "children_count", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["lft"], name: "index_comments_on_lft"
+    t.index ["parent_id"], name: "index_comments_on_parent_id"
+    t.index ["product_id"], name: "index_comments_on_product_id"
+    t.index ["rgt"], name: "index_comments_on_rgt"
   end
 
   create_table "discount_products", force: :cascade do |t|
@@ -150,6 +168,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_06_01_041205) do
 
   add_foreign_key "cart_items", "carts"
   add_foreign_key "cart_items", "products"
+  add_foreign_key "comments", "products"
   add_foreign_key "discount_products", "discounts"
   add_foreign_key "discount_products", "products"
   add_foreign_key "discounts", "shops"

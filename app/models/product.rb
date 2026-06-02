@@ -8,6 +8,7 @@ class Product < ApplicationRecord
 
   has_many :discount_products, dependent: :destroy
   has_many :discounts, through: :discount_products
+  has_many :comments, dependent: :destroy
   has_one :inventory, dependent: :destroy
 
   CATEGORIES = %w[
