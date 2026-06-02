@@ -39,6 +39,8 @@ gem "jwt"
 gem "active_model_serializers"
 gem "friendly_id", "~> 5.5.0"
 gem "pg_search"
+gem "httparty"
+gem "discordrb"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem

@@ -1,7 +1,13 @@
 class ApplicationController < ActionController::API
   rescue_from ActiveRecord::RecordInvalid, with: :handle_record_invalid
   rescue_from ActiveRecord::RecordNotFound, with: :handle_record_not_found
-  rescue_from ApiError, with: :handle_api_error
+  # rescue_from ApiError, with: :handle_api_error 
+
+  rescue_from ApiError do |error|
+    ErrorNotifier.notify(error)
+
+    handle_api_error(error)
+  end
 
   before_action :identify_api_key!
   before_action -> { check_permissions!("read") }
