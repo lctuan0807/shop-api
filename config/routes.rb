@@ -29,6 +29,14 @@ Rails.application.routes.draw do
           get :published
           get :draft
         end
+
+        resources :comments, only: [ :index, :create, :update, :destroy ], controller: "products/comments"
+      end
+
+      resources :comments do
+        member do
+          get :replies
+        end
       end
 
       resources :discounts do
