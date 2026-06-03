@@ -2,10 +2,7 @@ module Api
   module V1
     class OrdersController < ApplicationController
       def create
-        order = Orders::CreateService.new(
-          current_user,
-          order_params
-        ).call
+        order = Orders::CreateService.new(User.first, order_params).call
 
         render_success(
           "Order created successfully",
@@ -15,6 +12,23 @@ module Api
           status: :created
         )
       end
+    end
+
+    private
+
+    def order_params
+      params.require(:checkout).permit(
+        shops: [
+          :shop_id,
+          {
+            discount_ids: [],
+            products: [
+              :product_id,
+              :quantity
+            ]
+          }
+        ]
+      )
     end
   end
 end
