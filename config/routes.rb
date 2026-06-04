@@ -55,6 +55,8 @@ Rails.application.routes.draw do
         post :review
       end
 
+      resources :notifications, only: [ :index ]
+
       get "search", to: "search#index"
 
       get "", to: "products#index"

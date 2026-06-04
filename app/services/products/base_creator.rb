@@ -3,6 +3,7 @@ module Products
     def create(params)
       product = Product.create!(common_attributes(params))
       create_inventory(product, params)
+      push_notification(product)
       product
     end
 
@@ -42,6 +43,15 @@ module Products
         stock: product.quantity,
         reservations: []
       )
+    end
+
+    def push_notification(product)
+      Notifications::CreateService.new(
+        sender: product.shop,
+        receiver_id: 1,
+        kind: "product_created",
+        product_name: product.name
+      ).call
     end
   end
 end

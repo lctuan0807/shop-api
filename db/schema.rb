@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_06_02_123244) do
+ActiveRecord::Schema[7.2].define(version: 2026_06_04_033839) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -101,6 +101,27 @@ ActiveRecord::Schema[7.2].define(version: 2026_06_02_123244) do
     t.index ["shop_id", "product_id"], name: "index_inventories_on_shop_id_and_product_id", unique: true
   end
 
+  create_table "notifications", force: :cascade do |t|
+    t.string "kind", null: false
+    t.integer "sender_id", null: false
+    t.string "sender_type", null: false
+    t.integer "receiver_id", null: false
+    t.string "content", null: false
+    t.jsonb "options", default: {}
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "orders", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.decimal "total_price", null: false
+    t.decimal "total_discount", null: false
+    t.decimal "shipping_fee", null: false
+    t.decimal "total_checkout", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "products", force: :cascade do |t|
     t.string "name", null: false
     t.string "thumbnail", null: false
@@ -147,6 +168,17 @@ ActiveRecord::Schema[7.2].define(version: 2026_06_02_123244) do
     t.index ["email"], name: "index_shops_on_email", unique: true
   end
 
+  create_table "table_order_items", force: :cascade do |t|
+    t.bigint "order_id", null: false
+    t.bigint "product_id", null: false
+    t.integer "quantity", null: false
+    t.decimal "price", precision: 10, scale: 2, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["order_id"], name: "index_table_order_items_on_order_id"
+    t.index ["product_id"], name: "index_table_order_items_on_product_id"
+  end
+
   create_table "tokens", force: :cascade do |t|
     t.string "public_key", null: false
     t.string "private_key", null: false
@@ -175,4 +207,6 @@ ActiveRecord::Schema[7.2].define(version: 2026_06_02_123244) do
   add_foreign_key "products", "shops"
   add_foreign_key "reservations", "carts"
   add_foreign_key "reservations", "inventories"
+  add_foreign_key "table_order_items", "orders"
+  add_foreign_key "table_order_items", "products"
 end

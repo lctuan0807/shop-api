@@ -13,6 +13,7 @@ module Products
         )
       )
       create_inventory(product)
+      push_notification(product)
       product
     end
 
