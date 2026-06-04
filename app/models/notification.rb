@@ -3,7 +3,7 @@ class Notification < ApplicationRecord
 
   belongs_to :sender, polymorphic: true
   # belongs_to :receiver, polymorphic: true
-  
+
   validates :kind, presence: true
   validates :sender_id, presence: true
   validates :sender_type, presence: true

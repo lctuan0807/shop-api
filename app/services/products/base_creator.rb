@@ -44,7 +44,7 @@ module Products
         reservations: []
       )
     end
-    
+
     def push_notification(product)
       Notifications::CreateService.new(
         sender: product.shop,
