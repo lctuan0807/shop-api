@@ -24,7 +24,7 @@ module Api
       end
 
       def create
-        creator = Products::Factory.build(
+        creator = ::Products::Factory.build(
           product_params[:category]
         )
         product = creator.create(product_params.merge!(shop_id: @token.user_id))
