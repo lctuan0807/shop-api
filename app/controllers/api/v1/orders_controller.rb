@@ -12,23 +12,23 @@ module Api
           status: :created
         )
       end
-    end
 
-    private
+      private
 
-    def order_params
-      params.require(:checkout).permit(
-        shops: [
-          :shop_id,
-          {
-            discount_ids: [],
-            products: [
-              :product_id,
-              :quantity
-            ]
-          }
-        ]
-      )
+      def order_params
+        params.require(:checkout).permit(
+          shops: [
+            :shop_id,
+            {
+              discount_ids: [],
+              products: [
+                :product_id,
+                :quantity
+              ]
+            }
+          ]
+        )
+      end
     end
   end
 end

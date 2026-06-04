@@ -1,117 +1,53 @@
 module Orders
   class CreateService
-    def initialize(user, params)
+    def initialize(user, checkout_params)
       @user = user
-      @params = params
-      @locks = []
+      @checkout_params = checkout_params
     end
 
     def call
-      acquire_locks!
-  
+      lock_manager.acquire!
+
       ActiveRecord::Base.transaction do
-          lock_inventory_rows!
+        Orders::InventoryValidator.new(checkout_params).call
 
-          validate_inventory!
+        pricing = Orders::PricingService.new(checkout_params).call
 
-          order = create_order!
+        order = create_order!(pricing)
 
-          create_order_items!(order)
+        Orders::OrderItemCreator.new(order, checkout_params).call
 
-          deduct_inventory!
+        Orders::InventoryDeductService.new(checkout_params).call
 
-          order
-        end
-      ensure
-        release_inventory_locks!
+        order
       end
+    ensure
+      lock_manager.release!
     end
-    
+
     private
 
-    attr_reader :user, :params, :locks
+    attr_reader :user, :checkout_params
 
-    def create_order!
+    def create_order!(pricing)
       Order.create!(
         user: user,
-        total_price: total_price,
-        total_discount: total_discount,
-        shipping_fee: shipping_fee,
-        total_checkout: total_checkout,
+        total_price: pricing[:total_price],
+        shipping_fee: pricing[:shipping_fee],
+        total_discount: pricing[:total_discount],
+        total_checkout: pricing[:total_checkout],
         status: :pending
       )
     end
 
-    def create_order_items!(order)
-      requested_products.each do |item|
-        product = product_map[item[:product_id]]
-
-        OrderItem.create!(
-          order: order,
-          product: product,
-          quantity: item[:quantity],
-          price: product.price
-        )
-      end
+    def lock_manager
+      @lock_manager ||= Locks::InventoryLockManager.new(product_ids)
     end
 
-    def deduct_inventory!
-      inventories.each do |inventory|
-        quantity = requested_quantities[inventory.product_id]
-
-        inventory.update!(stock: inventory.stock - quantity)
-      end
-    end
-
-    def product_map
-      @product_map ||= Product.where(id: requested_product_ids).index_by(&:id)
-    end
-
-    def requested_products
-      @requested_products ||= params[:shops].flat_map { |shop| shop[:products] }
-    end
-
-    def requested_product_ids
-      requested_products.map { |item| item[:product_id] }
-    end
-
-    def requested_quantities
-      @requested_quantities ||= requested_products.each_with_object({}) do |item, hash|
-        hash[item[:product_id]] = item[:quantity]
-      end
-    end
-
-    def lock_inventory_rows!
-      Inventory.where(id: inventory_ids).order(:id).lock.load
-    end
-
-    def validate_inventory!
-      inventories.each do |inventory|
-        quantity = requested_quantities[inventory.product_id]
-
-        raise BadRequestError, "Insufficient stock for product #{inventory.product_id}" if inventory.stock < quantity
-      end
-    end
-
-    def inventories
-      @inventories ||= Inventory.includes(:product).where(product_id: requested_product_ids)
-    end
-
-    def inventory_ids
-      inventories.pluck(:id)
-    end
-
-    # lock inventories in sorted order to avoid deadlocks
-    def acquire_locks!
-      inventory_ids.sort.each do |inventory_id|
-        lock = RedisLock.new("inventory:#{inventory_id}")
-        lock.acquire!
-        locks << lock
-      end
-    end
-
-    def release_inventory_locks!
-      locks.reverse_each(&:release!)
+    def product_ids
+      checkout_params[:shops]
+        .flat_map { |shop| shop[:products] }
+        .map { |product| product[:product_id] }
     end
   end
 end
