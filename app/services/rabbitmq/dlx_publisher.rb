@@ -9,18 +9,16 @@ module Rabbitmq
 
       def publish
         # create exchange
-        main_exchange = $rabbitmq_channel.direct(NOTI_EXCHANGE,
-          durable: true
-        )
+        main_exchange = $rabbitmq_channel.direct(NOTI_EXCHANGE, durable: true)
 
         # create queue
         notification_queue = $rabbitmq_channel.queue(
           NOTI_QUEUE_PROCESS,
-          durable: true,
-          exclusive: false,
+          durable: true, # true: survive broker restart
+          exclusive: false, # false: allow other connections to access the queue
           arguments: {
-            "x-dead-letter-exchange" => DEAD_LETTER_EXCHANGE,
-            "x-dead-letter-routing-key" => DEAD_LETTER_ROUTING_KEY
+            "x-dead-letter-exchange" => DEAD_LETTER_EXCHANGE, # exchange to send messages to when they are dead lettered
+            "x-dead-letter-routing-key" => DEAD_LETTER_ROUTING_KEY # routing key to use when sending dead lettered messages
           }
         )
 
