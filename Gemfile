@@ -43,6 +43,7 @@ gem "httparty"
 gem "discordrb"
 gem "awesome_nested_set"
 gem "bunny", "~> 3.1.0"
+gem "aws-sdk-s3"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
