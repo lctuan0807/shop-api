@@ -11,7 +11,8 @@ module S3
         content_type: content_type
       )
 
-      public_url
+      # Generate a signed URL for the file with CloudFront
+      CloudfrontSignerService.generate_url(key)
     end
 
     private
@@ -30,10 +31,6 @@ module S3
 
     def content_type
       Marcel::MimeType.for(file)
-    end
-
-    def public_url
-      object.public_url
     end
   end
 end
