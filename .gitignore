@@ -31,3 +31,8 @@
 # Ignore key files for decrypting credentials and more.
 /config/*.key
 
+# Ignore CloudFront private key
+private_key.pem
+
+# Ignore CloudFront public key
+public_key.pem
