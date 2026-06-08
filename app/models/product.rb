@@ -11,6 +11,8 @@ class Product < ApplicationRecord
   has_many :comments, dependent: :destroy
   has_one :inventory, dependent: :destroy
 
+  has_one_attached :thumbnail
+
   CATEGORIES = %w[
     clothing
     electronic

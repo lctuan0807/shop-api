@@ -57,6 +57,9 @@ Rails.application.routes.draw do
 
       resources :notifications, only: [ :index ]
 
+      post "/direct_uploads", to: "direct_uploads#create"
+      post "/presigned_uploads", to: "presigned_uploads#create"
+
       get "search", to: "search#index"
 
       get "", to: "products#index"
