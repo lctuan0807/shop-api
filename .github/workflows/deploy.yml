@@ -28,6 +28,7 @@ jobs:
         run: |
           # Starts db, redis, and rabbitmq. The workflow blocks until healthchecks pass.
           docker compose -f docker-compose.prod.yml up -d db redis rabbitmq
+          sleep 10
 
       - name: Run Database Migrations
         run: |
