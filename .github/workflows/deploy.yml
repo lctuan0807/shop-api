@@ -25,10 +25,6 @@ jobs:
           bundle config set --local without 'development test'
           bundle install --jobs 4 --retry 3
 
-      - name: Precompile Assets
-        run: |
-          bundle exec rails assets:precompile
-
       - name: Run Database Migrations
         run: |
           bundle exec rails db:migrate
