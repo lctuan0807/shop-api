@@ -88,8 +88,26 @@ test:
 production:
   <<: *default
   primary:
-    url: <%= ENV['DATABASE_URL'] %>
+    adapter: postgresql
+    encoding: unicode
+    host: db
+    username: postgres
+    password: <%= ENV['DB_PASSWORD'] %>
+    database: shop_api_production
+    pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   queue:
-    url: <%= ENV['DATABASE_URL'] %>
+    adapter: postgresql
+    encoding: unicode
+    host: db
+    username: postgres
+    password: <%= ENV['DB_PASSWORD'] %>
+    database: shop_api_production
+    pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   cache:
-    url: <%= ENV['DATABASE_URL'] %>
+    adapter: postgresql
+    encoding: unicode
+    host: db
+    username: postgres
+    password: <%= ENV['DB_PASSWORD'] %>
+    database: shop_api_production
+    pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
