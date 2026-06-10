@@ -37,7 +37,7 @@ gem "image_processing", "~> 1.2"
 
 gem "jwt"
 gem "active_model_serializers"
-gem "friendly_id", "~> 5.5.0"
+gem "friendly_id", "~> 5.7.0"
 gem "pg_search"
 gem "httparty"
 gem "discordrb"
