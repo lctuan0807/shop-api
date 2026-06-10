@@ -1,4 +1,4 @@
-name: Rails CI/CD Deployment
+name: Rails Stack Docker Deployment
 
 on:
   push:
@@ -6,29 +6,40 @@ on:
 
 jobs:
   deploy:
-    name: Deploy Rails to EC2
-    runs-on: [self-hosted, rails-production] # Matches the tag set up in Step 1
-
-    env:
-      RAILS_ENV: production
-      # Read production credentials securely from GitHub Repo Secrets
-      DATABASE_URL: ${{ secrets.DATABASE_URL }}
-      RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
+    name: Build and Rotate Containers
+    runs-on: [self-hosted, rails-production]
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Install Ruby Dependencies
+      - name: Generate Runtime Environment File
         run: |
-          bundle config set --local deployment 'true'
-          bundle config set --local without 'development test'
-          bundle install --jobs 4 --retry 3
+          echo "RAILS_MASTER_KEY=${{ secrets.RAILS_MASTER_KEY }}" > .env
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+          echo "RABBITMQ_USER=${{ secrets.RABBITMQ_USER }}" >> .env
+          echo "RABBITMQ_PASSWORD=${{ secrets.RABBITMQ_PASSWORD }}" >> .env
+
+      - name: Build Application App Image
+        run: |
+          docker compose -f docker-compose.prod.yml build app
+
+      - name: Boot Database and Messaging Services
+        run: |
+          # Starts db, redis, and rabbitmq. The workflow blocks until healthchecks pass.
+          docker compose -f docker-compose.prod.yml up -d db redis rabbitmq
 
       - name: Run Database Migrations
         run: |
-          bundle exec rails db:migrate
+          # Executes migrations safely inside a transient app container context
+          docker compose -f docker-compose.prod.yml run --rm app bundle exec rails db:migrate
 
-      - name: Restart Puma Application Server
+      - name: Deploy Live App Service Container
         run: |
-          sudo systemctl restart puma
+          # Recreates and boots the app server container with zero downtime
+          docker compose -f docker-compose.prod.yml up -d app
+
+      - name: Clear Old Cache Images
+        run: |
+          # Prevents the EC2 disk from filling up over continuous deployments
+          docker image prune -f
