@@ -47,9 +47,7 @@ Rails.application.configure do
 
   # Replace the default in-process memory cache store with a durable alternative.
   config.cache_store = :redis_cache_store, {
-    url: ENV.fetch("REDIS_URL"),
-    namespace: "shop_api:cache",
-    expires_in: 12.hours
+    url: ENV.fetch("REDIS_URL")
   }
 
   # Replace the default in-process and non-durable queuing backend for Active Job.
