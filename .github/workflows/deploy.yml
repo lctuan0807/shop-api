@@ -1,0 +1,38 @@
+name: Rails CI/CD Deployment
+
+on:
+  push:
+    branches: [ "master" ]
+
+jobs:
+  deploy:
+    name: Deploy Rails to EC2
+    runs-on: [self-hosted, rails-production] # Matches the tag set up in Step 1
+
+    env:
+      RAILS_ENV: production
+      # Read production credentials securely from GitHub Repo Secrets
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Install Ruby Dependencies
+        run: |
+          bundle config set --local deployment 'true'
+          bundle config set --local without 'development test'
+          bundle install --jobs 4 --retry 3
+
+      - name: Precompile Assets
+        run: |
+          bundle exec rails assets:precompile
+
+      - name: Run Database Migrations
+        run: |
+          bundle exec rails db:migrate
+
+      - name: Restart Puma Application Server
+        run: |
+          sudo systemctl restart puma
