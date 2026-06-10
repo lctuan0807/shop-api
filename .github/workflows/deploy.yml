@@ -34,7 +34,7 @@ jobs:
       - name: Run Database Migrations
         run: |
           # Executes migrations safely inside a transient app container context
-          docker compose -f docker-compose.prod.yml run --rm app bundle exec rails db:migrate
+          docker compose -f docker-compose.prod.yml run --rm app bundle exec rails db:prepare
 
       - name: Deploy Live App Service Container
         run: |
